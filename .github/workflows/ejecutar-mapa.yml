@@ -1,0 +1,28 @@
+name: Ejecutar Mapa IGED en GitHub
+
+on: 
+  push:
+    branches:
+      - main  # Ejecutar cuando se suban cambios a la rama "main"
+  workflow_dispatch:  # Permite ejecutarlo manualmente desde GitHub Actions
+
+jobs:
+  run-mapa:
+    runs-on: ubuntu-latest  # Usamos una máquina virtual con Linux
+
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: 🛠️ Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"  # Asegura que se use Python 3.9
+
+      - name: 📦 Instalar dependencias
+        run: |
+          pip install geopandas pandas matplotlib openpyxl fiona
+
+      - name: 🚀 Ejecutar el script
+        run: python mapa.py
+
