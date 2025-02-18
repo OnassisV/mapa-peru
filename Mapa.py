@@ -6,6 +6,25 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import socket
 import fiona
+import sys
+
+# Lista de IPs permitidas
+IP_PERMITIDAS = ["11.35.85.97", "11.35.87.30"]
+
+def verificar_ip():
+    try:
+        ip_actual = socket.gethostbyname(socket.gethostname())
+        if ip_actual not in IP_PERMITIDAS:
+            print(f"⚠️ Acceso denegado: Tu IP ({ip_actual}) no está autorizada.")
+            sys.exit()  # Cierra el programa
+        else:
+            print(f"✅ Acceso permitido: IP ({ip_actual}) autorizada.")
+    except Exception as e:
+        print(f"❌ Error al obtener la IP: {e}")
+        sys.exit()  # Cierra el programa si no se puede verificar la IP
+
+# Ejecutar la verificación antes de iniciar el programa
+verificar_ip()
 
 # Ruta del shapefile (ajústala si es necesario)
 shapefile_path = "SHPCensoDepartamento INEI 2007 geogpsperu SuyoPomalia.shp"
@@ -60,14 +79,6 @@ def descargar_plantilla():
 
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo generar la plantilla: {e}")
-
-# Función para obtener la IP de la máquina
-def obtener_ip():
-    try:
-        ip = socket.gethostbyname(socket.gethostname())
-        messagebox.showinfo("IP de la Máquina", f"Tu IP es: {ip}")
-    except Exception as e:
-        messagebox.showerror("Error", f"No se pudo obtener la IP: {e}")
 
 # Función para generar el mapa con etiquetas de datos
 def generar_mapa():
@@ -127,10 +138,6 @@ btn_descargar.pack(pady=5)
 # Botón para cargar el archivo de datos y generar el mapa
 btn_generar = tk.Button(root, text="Cargar Datos y Generar Mapa", command=generar_mapa)
 btn_generar.pack(pady=5)
-
-# Botón para obtener la IP de la máquina
-btn_ip = tk.Button(root, text="Obtener IP de la Máquina", command=obtener_ip)
-btn_ip.pack(pady=5)
 
 # Iniciar la interfaz
 root.mainloop()
